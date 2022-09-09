@@ -2,17 +2,20 @@ import express from "express";
 import createHttpError from "http-errors";
 import { adminOnlyMiddleware } from "../lib/auth/host.js";
 import { JWTAuthMiddleware } from "../lib/auth/token.js";
+import { createAccessToken } from "../lib/auth/tools.js";
 import UsersModel from "./model.js";
 
 
 const usersRouter = express.Router();
 
-usersRouter.post("/", async (req, res, next) => {
+usersRouter.post("/register", async (req, res, next) => {
   try {
     const newUser = new UsersModel(req.body);
+    
     const { _id } = await newUser.save();
+    const token = await createAccessToken({ _id: newUser._id, role: newUser.role })
 
-    res.status(201).send({ _id });
+    res.status(201).send({_id,token});
   } catch (error) {
     next(error);
   }
