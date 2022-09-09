@@ -1,10 +1,12 @@
 import express from "express"
 import createHttpError from "http-errors"
+import { adminOnlyMiddleware } from "../lib/auth/host.js"
+import { JWTAuthMiddleware } from "../lib/auth/token.js"
 import AccomodationsModel from "./model.js"
 
 const accomodationsRouter = express.Router()
 
-accomodationsRouter.post("/", async (req, res, next) => {
+accomodationsRouter.post("/",JWTAuthMiddleware, adminOnlyMiddleware, async (req, res, next) => {
     try {
       const newAccomodation = new AccomodationsModel(req.body) 
       const { _id } = await newAccomodation.save()
@@ -15,7 +17,7 @@ accomodationsRouter.post("/", async (req, res, next) => {
     }
   })
 
-accomodationsRouter.get("/", async (req, res, next) => {
+accomodationsRouter.get("/",JWTAuthMiddleware, async (req, res, next) => {
   try {
     const accomodations = await AccomodationsModel.find().populate({ path: "users" });
     res.send(accomodations);
@@ -24,7 +26,7 @@ accomodationsRouter.get("/", async (req, res, next) => {
   }
 });
 
-accomodationsRouter.get("/:accomodationId", async (req, res, next) => {
+accomodationsRouter.get("/:accomodationId",JWTAuthMiddleware, async (req, res, next) => {
   try {
     const accomodation = await AccomodationsModel.findById(req.params.accomodationId).populate({ path: "users" });
     if (accomodation) {
@@ -73,3 +75,5 @@ accomodationsRouter.delete("/:accomodationId", async (req, res, next) => {
     next(error);
   }
 });
+
+export default accomodationsRouter

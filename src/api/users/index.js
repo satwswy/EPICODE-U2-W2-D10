@@ -4,6 +4,7 @@ import { adminOnlyMiddleware } from "../lib/auth/host.js";
 import { JWTAuthMiddleware } from "../lib/auth/token.js";
 import UsersModel from "./model.js";
 
+
 const usersRouter = express.Router();
 
 usersRouter.post("/", async (req, res, next) => {
@@ -38,6 +39,19 @@ usersRouter.get("/me", JWTAuthMiddleware, async (req, res, next) => {
     next(error);
   }
 });
+
+usersRouter.get("/me/accomodations", JWTAuthMiddleware, async (req, res, next) => {
+    try {
+      const user = await UsersModel.findById(req.user._id);
+      if (user) {
+        res.send(user.accomodations);
+      } else {
+        next(createError(401, `User with id ${req.user._id} not found!`));
+      }
+    } catch (error) {
+      next(error);
+    }
+  });
 
 usersRouter.put("/me", JWTAuthMiddleware, async (req, res, next) => {
   try {
@@ -145,3 +159,6 @@ usersRouter.post("/login", async (req, res, next) => {
       next(error)
     }
   })
+
+
+export default usersRouter
