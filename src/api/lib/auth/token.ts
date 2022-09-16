@@ -1,7 +1,7 @@
 import createHttpError from "http-errors";
 import {Request, RequestHandler } from "express";
-import { verifyAccessToken } from "./tools.js";
-import { UserDocument } from "../../users/users.js";
+import { verifyAccessToken } from "./tools";
+import { UserDocument } from "../../users/users";
 
 interface IUserRequest extends Request{
   user?: Partial<UserDocument>
