@@ -25,7 +25,10 @@ server.use(forbiddenErrorHandler);
 server.use(notFoundErrorHandler);
 server.use(genericErroHandler);
 
-mongoose.connect(process.env.MONGO_CONNECTION_URL);
+
+if(process.env.MONGO_CONNECTION_URL) mongoose.connect(process.env.MONGO_CONNECTION_URL);
+else throw new Error("Mongo url missing!")
+
 
 mongoose.connection.on("connected", () => {
   console.log("Successfully connected to MongoDB!");
