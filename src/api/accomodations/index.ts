@@ -1,12 +1,11 @@
 import express from "express"
 import createHttpError from "http-errors"
-import { adminOnlyMiddleware } from "../lib/auth/host.js"
-import { JWTAuthMiddleware } from "../lib/auth/token.js"
+import { JWTAuthMiddleware } from "../lib/auth/token"
 import AccomodationsModel from "./model.js"
 
 const accomodationsRouter = express.Router()
 
-accomodationsRouter.post("/",JWTAuthMiddleware, adminOnlyMiddleware, async (req, res, next) => {
+accomodationsRouter.post("/",JWTAuthMiddleware,  async (req, res, next) => {
     try {
       const newAccomodation = new AccomodationsModel(req.body) 
       const { _id } = await newAccomodation.save()
