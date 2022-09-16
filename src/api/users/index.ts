@@ -1,9 +1,9 @@
 import express from "express";
-import createHttpError from "http-errors";
+import createError from "http-errors";
 import { adminOnlyMiddleware } from "../lib/auth/host.js";
 import { JWTAuthMiddleware } from "../lib/auth/token.js";
 import { createAccessToken } from "../lib/auth/tools.js";
-import UsersModel from "./model.js";
+import UsersModel from "./model";
 
 
 const usersRouter = express.Router();
@@ -89,7 +89,7 @@ usersRouter.get("/:userId", JWTAuthMiddleware, async (req, res, next) => {
       res.send(user);
     } else {
       next(
-        createHttpError(404, `User with id ${req.params.userId} not found!`)
+        createError(404, `User with id ${req.params.userId} not found!`)
       );
     }
   } catch (error) {
@@ -113,7 +113,7 @@ usersRouter.put(
         res.send(updatedUser);
       } else {
         next(
-          createHttpError(404, `User with id ${req.params.userId} not found!`)
+          createError(404, `User with id ${req.params.userId} not found!`)
         );
       }
     } catch (error) {
@@ -133,7 +133,7 @@ usersRouter.delete(
         res.status(204).send();
       } else {
         next(
-          createHttpError(404, `User with id ${req.params.userId} not found!`)
+          createError(404, `User with id ${req.params.userId} not found!`)
         );
       }
     } catch (error) {

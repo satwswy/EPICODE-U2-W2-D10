@@ -2,8 +2,8 @@ import express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import mongoose from "mongoose";
-import usersRouter from "./api/users/index.js";
-import accomodationsRouter from "./api/accomodations/index.js";
+import usersRouter from "./api/users";
+import accomodationsRouter from "./api/accomodations";
 import {
   forbiddenErrorHandler,
   genericErroHandler,
